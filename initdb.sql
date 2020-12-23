@@ -1,7 +1,7 @@
 
+use tablets;
 
-
-CREATE TABLE TabPrdn (
+CREATE TABLE tabprdn (
     -> Batch_No varchar(10) NOT NULL,
     -> API_Lot_No varchar(10) NOT NULL,
     -> API_Particle_Size enum('Large', 'Medium', 'Small') NOT NULL,
