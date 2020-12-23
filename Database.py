@@ -12,7 +12,7 @@ class ProductionDAO:
 
     def create(self, values):
         cursor = self.db.cursor()
-        sql="insert into production (Batch_No, API_Particle_Size, Screen_Size, Blend_Time, Compressor, Inlet_Temp, Spray_Rate, Dissolution) values (%s,%s, %s,%s, %s,%s, %s,%s)"
+        sql="insert into production (Batch_No, API_Lot_No, API_Particle_Size, Screen_Size, Blend_Time, Compressor, Inlet_Temp, Spray_Rate, Dissolution) values (%s,%s, %s,%s, %s,%s, %s,%s)"
         cursor.execute(sql, values)
         self.db.commit()
         return cursor.lastrowid
@@ -34,7 +34,7 @@ class ProductionDAO:
     
     def update(self, values):
         cursor = self.db.cursor()
-        sql= "update production set API_Particle_Size=%s, Screen_Size=%s, Blend_Time=%s, Compressor=%s, Inlet_Temp=%s, Spray_Rate=%s, Dissolution%s where Batch_No = %s"
+        sql= "update production set API_Lot_No%s, API_Particle_Size=%s, Screen_Size=%s, Blend_Time=%s, Compressor=%s, Inlet_Temp=%s, Spray_Rate=%s, Dissolution%s where Batch_No = %s"
         cursor.execute(sql, values)
         self.db.commit()
 
