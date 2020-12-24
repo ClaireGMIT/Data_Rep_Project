@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title> Dissolution_Results</title>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<style type="text/css">
+	h1{
+		color: purple; font-family: Arial; text-shadow: 1px 2px 0px #000000; font-weight: bold;
+		}
+	h2{
+		color: black; font-family: Times; font-weight: bold;
+		}
+	body{
+		background-color: #d5d3d3;
+		padding: 30px;
+	}
+	.myClass{background-color:#b87db8; padding: 10px;}
+	rect:hover {fill: black;}
+	
+
+	</style>
+</head>
+
+<body>
+
+	<img src="images/Tablets7.jpg" width="200" align="center" alt="Pic1" title="PharmaBusiness Logo">
+	<h1 id="output">Blending time (minutes) per batch</h1>
+	<h3 id="output">Blending Time between 180 to 230 seconds is optimal. Anything outside this range is outside the validated blending time  </h3>
+
+	<div id="myDiv"></div>
+</body>
+
+<script type="text/javascript">
+//Data Array to be used to create graph
+var blendTime = [170, 110, 180, 130, 150, 190, 160, 160, 175];
+
+
+//create a scale for y-axis
+var yScale = d3.scaleLinear()
+	.domain([0, d3.max(blendTime)])
+	.range([300, 0]);
+
+//Create a scale for the x-axis
+var xScale = d3.scalePoint() //To create a ategorical axis
+	.domain(["A123", "A124", "A125", "A126", "A127", "A128", "A129", "A130", "A131"]) //This is what is written on the axes
+	.range([0, 1000]); //this is where the axis is placed in pixels
+
+//Create a y-axis
+var yAxis = d3.axisLeft()
+	.scale(yScale);
+
+//Create the x-axis
+var xAxis = d3.axisBottom()
+	.scale(xScale);
+
+//Create an SVG Container
+let svgContainer = d3.select("#myDiv").append("svg")
+    .attr("height", 1000)
+    .attr("width", 1200);
+ 
+//Create a rectangle
+let myRectangle = svgContainer.selectAll('rect')
+    .data(blendTime);
+ 
+// Add attributes to rectangle
+myRectangle.enter()
+    .append("rect")
+        // start of transition
+		.attr("fill", "green")
+		.attr("x", function(d, i){return 50 + (i*110);})
+		.attr("y", 320)
+		.attr("width", 40)
+		.transition()
+		.duration(2000)
+        // end of transition
+		
+        // function will run and returns i (the index value of the array)
+        // d = data, i = index
+		.attr("x", function(d, i){return 50 + (i*110);})
+        .attr("y", function(d) {return 300 - d;})
+        .attr("width", 100)
+        .attr("height", function(d){return d;})
+        .attr("fill", function(d) {
+			if (d <180) {return "red";}
+			else if (d <=180) {return "green";}
+			else if (d <=230) {return "green";}
+			else {return "red";}
+			});
+
+//Add label text for Bar Chart
+let myLabel = svgContainer.selectAll("text")
+	.data(blendTime);
+
+myLabel.enter()
+	.append("text")
+        // start of transition for labels
+		.transition()
+		.duration(2000)
+		.delay(1000)
+		.ease(d3.easeBounceOut)
+        // end of transition for labels
+	
+		.attr("x", function(d, i){
+			return 85 + (i*110);
+		})
+		.attr("y", function(d){
+			return 330 - d;
+		})
+		.attr("text-anchor", "middle")
+		.attr("font-family", "sans-serif")
+		.attr("font-size", "15px")
+		.attr("fill", "white")
+		.text(function(d){
+			return d + "s";
+		})
+
+//Append axes to the graphs
+svgContainer.append("g")
+	.attr("transform", "translate(40, 0)")
+	.call(yAxis);
+
+svgContainer.append("g")
+	.attr("transform", "translate(40, 300)")
+	.call(xAxis);
+
+
+</script>
+</html>

@@ -76,5 +76,6 @@ def delete(Batch_No):
     tabletsDAO.delete(Batch_No)
     return jsonify({"done":True})
 
+
 if __name__ == "__main__":
     app.run(debug=True)

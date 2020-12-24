@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title> Batch_Record</title>
+	<style type="text/css">
+	h1{
+		color: purple; font-family: Arial; text-shadow: 1px 2px 0px #000000; font-weight: bold;
+		}
+	h2{
+		color: black; font-family: Times; font-weight: bold;
+		}
+	body{
+		background-color: #d5d3d3;
+		padding: 30px;
+	}
+	.myClass{background-color:#b87db8; padding: 10px;}
+
+	</style>
+</head>
+
+<body>
+	<img src="images/Tablets7.jpg" width="200" align="center" alt="Pic1" title="PharmaBusiness Logo">
+	<h1 id="output">Input Batch Data</h1>
+	<p class="myClass"> Click into the table below to compare the key attributes for each product.
+	</p>
+
+ 	<!-- List begins here -->
+	<ul>
+		<li>API Particle Size <button onclick="myFunction1()"> Click Here for More Information</button>
+			<p></p>
+		</li>
+		<li>API Screen Size <button onclick="myFunction2()">Click Here for More Information</button>
+			<p></p>
+		</li>
+		<li>Blending Time <button onclick="myFunction3()">Click Here for More Information</button>
+			<p></p>
+		</li>
+		<li>Compressor <button onclick="myFunction4()">Click Here for More Information</button>
+			<p></p>
+		</li>						
+		<li>Inlet Temperature <button onclick="myFunction5()">Click Here for More Information</button> 
+			<p></p>		
+		</li>
+		<li>Spray Rate <button onclick="myFunction6()">Click Here for More Information</button> 
+			<p> </p>		
+		</li>
+		<li>Dissolution Result <button onclick="myFunction7()">Click Here for More Information</button>
+			<p> </p>		
+		</li>		
+	</ul>
+
+	<p class="myClass"> Record Batch details here:
+	</p>	
+	<form>
+		<p>Batch Number: <br/>
+			<input type="text"/>
+		</p>
+		
+		</p>API Lot Number: <br/>
+			<input type="text"/>
+		</p>
+		
+		<p>API Particle Size: <br/>
+			<input type="radio" name="API Particle Size"/> Small  </br>
+			<input type="radio" name="API Particle Size"/> Medium </br>
+			<input type="radio" name="API Particle Size"/> Large </br>
+		</p>
+		
+		<p>API Screen Size: <br/>
+			<input type="radio" name="API Screen Size"/> 3  </br>
+			<input type="radio" name="API Screen Size"/> 4 </br>
+			<input type="radio" name="API Screen Size"/> 5 </br>
+		</p>
+
+		<p> Blending TIme:<br/>
+			<input type="text"/>
+		</P>
+		
+		<p>Compressor: <br/>
+			<input type="radio" name="Compressor"/> Compress1  </br>
+			<input type="radio" name="Compressor"/> Compress2 </br>
+		</p>
+
+		<p> Inlet Temperature:<br/>
+			<input type="text"/>
+		</P>
+
+		<p> Spray Rate:<br/>
+			<input type="text"/>
+		</P>
+
+		<p> Dissolution Result:<br/>
+			<input type="text"/>
+		</P>
+
+		<p>Additional Batch Notes:</p>
+			<textarea cols="50" rows="10">
+Enter additional Batch Information...
+
+			</textarea>	
+
+
+
+		</br>
+		
+		<input type="Submit"> 
+	
+	
+	</form>
+
+	
+</body>
+
+<script>
+
+function myFunction1() {
+	alert("API Particle Size: Particle size is an important attribute in Active Pharmaceutical Ingredients (API). For solid oral drug products (tablets and capsules) it impacts on homogeneity, flow, processing and dissolution");}
+
+function myFunction2() {
+	alert("API Screen Size: The screen size used determines the particle size of the API and has a significant impact on tablet dissolution. There are only three screen sizes allowed to be sued - 3, 4 and 5.");}
+
+function myFunction3() {
+	alert("Blending Time: This is the time taken to blend the tablet batch in minutes");}
+	
+function myFunction4() {
+	alert("Compressor: There are two machines available for comprssing the blend batch into tablets - Compress1 and Compress2");}
+
+function myFunction5() {
+	alert("Inlet Temperature: This is the temperature of the air inlet during coating of the tablet recorded in degC. It dictates the drying kinetics of the spray droplets as they travel from the spray nozzle to the tablet surface and is another critical processing parameter in film coating");}
+
+function myFunction6() {
+	alert("Spray Rate: This is the rate of spraying of the solution on to the tablet batch during coating and is recorded in g/min. Spray rate is one of the most important coating process parameters. A high spray rate may cause coating defects such as twinning, picking and sticking and logo bridging. A low spray rate may cause spray drying and a loss in coating efficiency.");}
+
+function myFunction7() {
+	alert("Dissolution: Tablet Dissolution is a standardised method for measuring the rate of drug release from a tablet. The administration of drugs via oral dosage forms is one of the most common and effective means of delivering treatments to patients. When a dosage form is swallowed, the rate at which it releases the active ingredient is critical to ensure that the drug is delivered properly. The rate at which the drug is released is called the dissolution rate.");}
+
+
+</script>
+</html>
