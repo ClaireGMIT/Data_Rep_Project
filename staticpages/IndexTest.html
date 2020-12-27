@@ -11,69 +11,54 @@
                     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 
-	<style type="text/css">
-        h1{
-            color: purple; font-family: Arial; text-shadow: 1px 2px 0px #000000; font-weight: bold; 
-            }
-        h2{
-            color: black; font-family: Times; font-weight: bold;
-            }
-        body {
-            background-color: #d5d3d3;
-            padding: 30px;
-        }
-        .myClass{background-color:#b87db8; padding: 10px;}
-    </style>
-
 </head>
 
 <body>
-    <img src="images/Tablets7.jpg" width="200" align="center" alt="Pic1" title="PharmaBusiness Logo">
-    
+  
 
     <div id="create-update" style="display:none" >
         <h1> Create and Edit</h1>
 
-        <table border="7" cellpadding="7" cellspacing="2" align="center" bgcolor="purple"   id="createUpdateForm">
+        <table  id="createUpdateForm">
     
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> Batch_No </td>
-                <td width="150" bgcolor="white"><input type="text" name="Batch_No" id="idInput"></td>
+            <tr> 
+                <td> Batch_No </td>
+                <td><input type="text" name="Batch_No" id="idInput"></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> API_Lot_No </td>
-                <td width="150" bgcolor="white"><input type="text" name="API_Lot_No"></td>
+            <tr> 
+                <td> API_Lot_No </td>
+                <td><input type="text" name="API_Lot_No"></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> API_Particle_Size </td>
-                <td width="150" bgcolor="white"><input type="text" name="API_Particle_Size"></td>
+            <tr> 
+                <td> API_Particle_Size </td>
+                <td><input type="text" name="API_Particle_Size"></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> Screen_Size </td>
-                <td width="150" bgcolor="white"><input type="text" name="Screen_Size"></td>
+            <tr> 
+                <td> Screen_Size </td>
+                <td><input type="text" name="Screen_Size"></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> Blend_Time </td>
-                <td width="150" bgcolor="white"><input type="number" name="Blend_Time "></td>
+            <tr> 
+                <td> Blend_Time </td>
+                <td><input type="text" name="Blend_Time "></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> Compressor </td>
-                <td width="150" bgcolor="white"><input type="text" name="Compressor"></td>
+            <tr> 
+                <td> Compressor </td>
+                <td><input type="text" name="Compressor"></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> Inlet_Temp </td>
-                <td width="150" bgcolor="white"><input type="number" name="Inlet_Temp"></td>
+            <tr> 
+                <td> Inlet_Temp </td>
+                <td><input type="text" name="Inlet_Temp"></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> Spray_Rate </td>
-                <td width="150" bgcolor="white"><input type="number" name="Spray_Rate"></td>
+            <tr> 
+                <td> Spray_Rate </td>
+                <td><input type="text" name="Spray_Rate"></td>
             </tr>
-            <tr align="center" height="50"> 
-                <td width="150" bgcolor="grey"> Dissolution </td>
-                <td width="150" bgcolor="white"><input type="number" name="Dissolution"></td>
+            <tr> 
+                <td> Dissolution </td>
+                <td><input type="text" name="Dissolution"></td>
             <tr>
-                <td width="150" bgcolor="purple"></td><td width="150" bgcolor="purple">
-                    <button id="create-button" onclick="doCreate()">CREATE</button>     
+                <td></td><td>
+                    <button id="create-button" onclick="doCreate()">CREATE</button>   //issue??  
                     <button id="update-button" onclick="doUpdate()">UPDATE</button>
                 </td>
             </tr>
@@ -83,8 +68,8 @@
     <div id="display">
         <h1> Batches </h1>
         <button onClick="showCreate()">Create</button>
-        <table border="7" cellpadding="7" cellspacing="2" align="center" bgcolor="purple" id="tabprdnTable" class="table">
-            <tr bgcolor="gray">
+        <table id="tabprdnTable" class="table">
+            <tr>
                 <th> Batch_No </th>
                 <th> API_Lot_No </th>
                 <th> API_Particle_Size </th>
@@ -165,9 +150,11 @@
 
 
         function doCreate(){
-            console.log("in doCreate")
-            tabprdn= gettabprdnFromForm()
-            console.log(tabprdn)
+            var tabprdn = {"API_Lot_No" : "AB", "API_Particle_Size":"Large", "Screen_Size":"5", "Blend_Time":89, "Compressor":"Compress1", "Inlet_Temp":110, "Spray_Rate":400, "Dissolution":75}
+
+            console.log(JSON.stringify(tabprdn));
+            //tabprdn = gettabprdnFromForm(); //issue here???seems to be here!!!
+            console.log(JSON.stringify(tabprdn));
             $.ajax({
                 url:"http://127.0.0.1:5000/tablets",
                 data:JSON.stringify(tabprdn),
@@ -175,27 +162,26 @@
                 dataType:"JSON",
                 contentType: "application/json; charset=utf-8",
                 success:function(result){
-                    console.log(result) 
-                    addtabprdnToTable(tabprdn)
-                    showDisplay()
-                    clearForm()
+                    console.log(result); 
+                    document.getElementById("output").innertext = json.stringify(result);//ensure correct above!!
+                    addtabprdnToTable(tabprdn);
+                    showDisplay();
+                    clearForm();
                 },
                 error:function(xhr,status,error){
                     console.log("error"+error)
                 }
-            })
-           
+            })           
         }
 
         function doUpdate(){
             tabprdn = gettabprdnFromForm()
-            updateServer(tabprdn)
-            
+            updateServer(tabprdn)            
         }
 
         function updateServer(tabprdn){
            $.ajax({
-                url: "http://127.0.0.1:5000/tablets/"+tabprdn.Batch_No, 
+                url: "/tablets/"+encodeURL(tabprdn.Batch_No), 
                 data: JSON.stringify(tabprdn),
                 method: "PUT",
                 dataType: "JSON",
@@ -219,7 +205,7 @@
             var index = rowElement.rowIndex;
             ISBN = rowElement.getAttribute("id");
             $.ajax({
-                url:"http://127.0.0.1:5000/tablets/"+Batch_No,
+                url:"/tablets/"+encodeURL(tabprdn.Batch_No),
                 method:"DELETE",
                 dateType:"JSON",
                 success:function(result){
@@ -252,12 +238,12 @@
             tabprdn.API_Lot_No = form.querySelector('input[name="API_Lot_No"]').value
             tabprdn.API_Particle_Size = form.querySelector('input[name="API_Particle_Size"]').value
             tabprdn.Screen_Size = form.querySelector('input[name="Screen_Size"]').value
-            tabprdn.Blend_Time = form.querySelector('input[name="Blend_Time"]').value
+            tabprdn.Blend_Time = form.querySelector('input[name="Blend_Time"]').value //issue here???
             tabprdn.Compressor = form.querySelector('input[name="Compressor"]').value
             tabprdn.Inlet_Temp = form.querySelector('input[name="Inlet_Temp"]').value
             tabprdn.Spray_Rate = form.querySelector('input[name="Spray_Rate"]').value
             tabprdn.Dissolution = form.querySelector('input[name="Dissolution"]').value
-            console.log(tabprdn)
+            //console.log(tabprdn)
             return tabprdn
         }
          function showDisplay() {
@@ -272,9 +258,9 @@
                url:'http://127.0.0.1:5000/tablets',
                method:'GET',
                data:"",
-               datatype:'JSON',
-               success:function(results){
-                    for (tabprdn of results){
+               dataType:'JSON',
+               success:function(result){
+                    for (tabprdn of result){
                          addtabprdnToTable(tabprdn)
                     }
                },
