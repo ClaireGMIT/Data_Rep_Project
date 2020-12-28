@@ -14,17 +14,16 @@
 </head>
 
 <body>
-  
 
-    <div id="create-update" style="display:none" >
-        <h1> Create and Edit</h1>
+</div>
+    <div id="createUpdateForm" style="display:none" >
+        <h1> Create and Update</h1>
 
-        <table  id="createUpdateForm">
-    
+        <table  id="createUpdateForm">    
             <tr> 
                 <td> Batch_No </td>
-                <td><input type="text" name="Batch_No" id="idInput"></td>
-            </tr>
+                <td><input type="text" name="Batch_No" ></td> 
+            </tr> 
             <tr> 
                 <td> API_Lot_No </td>
                 <td><input type="text" name="API_Lot_No"></td>
@@ -67,7 +66,7 @@
 
     <div id="display">
         <h1> Batches </h1>
-        <button onClick="showCreate()">Create</button>
+        <button id="showCreateButton" onClick="showCreate()">Create</button>
         <table id="tabprdnTable" class="table">
             <tr>
                 <th> Batch_No </th>
@@ -79,6 +78,30 @@
                 <th> Inlet_Temp </th>
                 <th> Spray_Rate </th>
                 <th> Dissolution </th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr id=123>
+                <td>123</td>
+                <td>AB</td>
+                <td>Large</td>
+                <td>5</td>
+                <td>89</td>
+                <td>Compress1</td>
+                <td>103</td>
+                <td>400</td>
+                <td>75</td>
+            </tr>
+            <tr id=500>
+                <td>500</td>
+                <td>AC</td>
+                <td>Small</td>
+                <td>3</td>
+                <td>189</td>
+                <td>Compress2</td>
+                <td>153</td>
+                <td>600</td>
+                <td>70</td>
             </tr>
         </table>
     </div>
@@ -88,9 +111,10 @@
             document.getElementById('display').style.display = "none"
             document.getElementById('update-button').style.display = "none"
             document.getElementById('create-button').style.display = "block"
-            document.getElementById('create-update').style.display = "block"
+            document.getElementById('createUpdateForm').style.display = "block"
 
         }
+
         function showUpdate(thisElem){
             var rowElement = thisElem.parentNode.parentNode;
             tabprdn = readtabprdnFromRow(rowElement)
@@ -99,9 +123,11 @@
             document.getElementById('display').style.display = "none"
             document.getElementById('update-button').style.display = "block"
             document.getElementById('create-button').style.display = "none"
-            document.getElementById('create-update').style.display = "block"
-
+            document.getElementById('createUpdateForm').style.display = "block"
+            document.getElementById('doCreateButton').style.display="none"
         }
+
+
         function readtabprdnFromRow(rowElement){
             tabprdn = {}
             tabprdn.Batch_No = rowElement.getAttribute("id");
@@ -116,11 +142,10 @@
             return tabprdn
             
         }
-        function populateForm(tabprdn){
-            var form = document.getElementById('createUpdateForm')
 
-            
-            form.querySelector('input[name="Batch_No"]').value = tabprdn.Batch_No
+        function populateForm(tabprdn){
+            var form = document.getElementById('createUpdateForm')          
+            //form.querySelector('input[name="Batch_No"]').value = tabprdn.Batch_No
             form.querySelector('input[name="Batch_No"]').disabled=true
             
             form.querySelector('input[name="API_Lot_No"]').value = tabprdn.API_Lot_No
@@ -131,7 +156,9 @@
             form.querySelector('input[name="Inlet_Temp"]').value = tabprdn.Inlet_Temp 
             form.querySelector('input[name="Spray_Rate"]').value = tabprdn.Spray_Rate
             form.querySelector('input[name="Dissolution"]').value = tabprdn.Dissolution
-        }
+            return tabprdn
+            }
+
         function clearForm() {
             var form = document.getElementById('createUpdateForm')
 
@@ -149,19 +176,21 @@
             }
 
 
-        function doCreate(){
-            var tabprdn = {"API_Lot_No" : "AB", "API_Particle_Size":"Large", "Screen_Size":"5", "Blend_Time":89, "Compressor":"Compress1", "Inlet_Temp":110, "Spray_Rate":400, "Dissolution":75}
 
-            console.log(JSON.stringify(tabprdn));
-            //tabprdn = gettabprdnFromForm(); //issue here???seems to be here!!!
+
+
+        function doCreate(){
+            //var tabprdn = {"API_Lot_No" : "AB", "API_Particle_Size":"Large", "Screen_Size":"5", "Blend_Time":89, "Compressor":"Compress1", "Inlet_Temp":110, "Spray_Rate":400, "Dissolution":75}
+
+            tabprdn = gettabprdnFromForm(); //issue here???seems to be here!!!
             console.log(JSON.stringify(tabprdn));
             $.ajax({
-                url:"http://127.0.0.1:5000/tablets",
-                data:JSON.stringify(tabprdn),
-                method:"POST",
-                dataType:"JSON",
+                "url":"http://127.0.0.1:5000/tablets",
+                "data":JSON.stringify(tabprdn),
+                "method":"POST",
+                "dataType":"JSON",
                 contentType: "application/json; charset=utf-8",
-                success:function(result){
+                "success":function(result){
                     console.log(result); 
                     document.getElementById("output").innertext = json.stringify(result);//ensure correct above!!
                     addtabprdnToTable(tabprdn);
@@ -171,7 +200,7 @@
                 error:function(xhr,status,error){
                     console.log("error"+error)
                 }
-            })           
+            });           
         }
 
         function doUpdate(){
@@ -196,7 +225,7 @@
                 error: function (xhr, status, error) {
                     console.log("error" + error)
                 }
-            })
+            });
         }
 
         function doDelete(thisElem){
@@ -214,7 +243,7 @@
                 error:function(xhr,status,error){
                     console.log(error)
                 }
-            })
+            });
         }
       
         function updateTableRow(tabprdn){
@@ -230,7 +259,9 @@
             //console.log("updating table")
         }
 
-        function gettabprdnFromForm(){
+
+
+        function gettabprdnFromForm(){ //issues from here
             var form = document.getElementById('createUpdateForm')
 
             var tabprdn = {}
@@ -238,7 +269,7 @@
             tabprdn.API_Lot_No = form.querySelector('input[name="API_Lot_No"]').value
             tabprdn.API_Particle_Size = form.querySelector('input[name="API_Particle_Size"]').value
             tabprdn.Screen_Size = form.querySelector('input[name="Screen_Size"]').value
-            tabprdn.Blend_Time = form.querySelector('input[name="Blend_Time"]').value //issue here???
+            tabprdn.Blend_Time = form.querySelector('input[name="Blend_Time"]').textContent //issue here???
             tabprdn.Compressor = form.querySelector('input[name="Compressor"]').value
             tabprdn.Inlet_Temp = form.querySelector('input[name="Inlet_Temp"]').value
             tabprdn.Spray_Rate = form.querySelector('input[name="Spray_Rate"]').value
@@ -248,7 +279,7 @@
         }
          function showDisplay() {
                 document.getElementById('display').style.display = "block"
-                document.getElementById('create-update').style.display = "none"
+                document.getElementById('createUpdateForm').style.display = "none"
 
             }
 
@@ -268,10 +299,9 @@
                    console.log ("error "+error +" code:"+status)
                }
 
-           })
+           });
         }
         function addtabprdnToTable(tabprdn){
-            //console.log("working so far")
             tableElem = document.getElementById("tabprdnTable")
             rowElem = tableElem.insertRow(-1)
             rowElem.setAttribute("id", tabprdn.Batch_No)
