@@ -3,9 +3,9 @@ from Tablets2DAO import tabletsDAO
 
 app = Flask(__name__, static_url_path='', static_folder='staticpages')
 
-@app.route('/')
-def index():
-    return "hello"
+#@app.route('/')
+#def index():
+#    return "hello"
 
 #get all
 # curl http://127.0.0.1:5000/tablets
