@@ -41,9 +41,11 @@
                 </tr>        
             </table>
         </div>
+
         <div id='createUpdateForm' style="display: none">
-                <h2><span id="createLabel">Create a</span> <span id="updateLabel">update</span> Batch</h2>
-                Batch_No <input type="text" name="Batch_No"/> 
+                <h1><span id="createLabel">Create a</span> <span id="updateLabel">Update</span> Batch</h1>
+                <h2><span>Do not leave any blank spaces</span></h2> <br/>
+                Batch_No <input type="text" name="Batch_No" id="idInput"/> 
                 <br/><br/>
                 API_Lot_No <input type="text" name="API_Lot_No"/> 
                 <br/><br/>
@@ -94,6 +96,9 @@
     }
 
     function showUpdate(buttonElement){
+        var rowElement = buttonElement.parentNode.parentNode
+        tabprdn = gettabprdnFromRow(rowElement)
+
         document.getElementById('showCreateButton').style.display="none"
         document.getElementById('batchTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
@@ -103,16 +108,13 @@
 
         document.getElementById('doCreateButton').style.display="none"
         document.getElementById('doUpdateButton').style.display="block"
-        var rowElement = buttonElement.parentNode.parentNode
-        // these is a way of finding the closest <tr> which would safer, closest()
-        
-        var tabprdn = gettabprdnFromRow(rowElement)
+
         populateFormWithtabprdn(tabprdn)
     }
 
     function doCreate(){
         var form = document.getElementById('createUpdateForm')
-
+        
         var tabprdn = {}
         tabprdn.Batch_No = form.querySelector('input[name="Batch_No"]').value
         tabprdn.API_Lot_No = form.querySelector('input[name="API_Lot_No"]').value
@@ -123,20 +125,19 @@
         tabprdn.Inlet_Temp = form.querySelector('input[name="Inlet_Temp"]').value
         tabprdn.Spray_Rate = form.querySelector('input[name="Spray_Rate"]').value
         tabprdn.Dissolution = form.querySelector('input[name="Dissolution"]').value
+        
         console.log(JSON.stringify(tabprdn))
         createtabprdnAjax(tabprdn)
         addtabprdnToTable(tabprdn)
         clearForm()
-
         showViewAll()
     }
 
     function doUpdate(){
-        var tabprdn = gettabprdnFromForm();
+        tabprdn = gettabprdnFromForm();
         var rowElement = document.getElementById(tabprdn.Batch_No);
         updatetabprdnAjax(tabprdn);
         settabprdnInRow(rowElement,tabprdn);
-       
         clearForm();
         showViewAll();
     }
@@ -145,8 +146,18 @@
         var tableElement = document.getElementById('batchTable');
         var rowElement = r.parentNode.parentNode;
         var index = rowElement.rowIndex;
-        deletetabprdnAjax(rowElement.getAttribute("id"));
-        tableElement.deleteRow(index);
+        Batch_No = rowElement.getAttribute("id");
+        $.ajax({
+            url: "http://127.0.0.1:5000/tablets/"+encodeURI(Batch_No),
+            method:"DELETE",
+            dataType: "JSON",
+            success:function(result){
+                tableElement.deleteRow(index);                 
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        })
     }
 
     function addtabprdnToTable(tabprdn){
@@ -192,22 +203,22 @@
         form.querySelector('input[name="Dissolution"]').value  =''
     }
 
-    function gettabprdnFromRow(rowElement){
-        var tabprdn ={}
-        tabprdn.Batch_No  = rowElement.cells[0].firstChild.textContent
+    function gettabprdnFromRow(rowElement){     
+        tabprdn ={}
+        tabprdn.Batch_No  = rowElement.getAttribute("id");
         tabprdn.API_Lot_No = rowElement.cells[1].firstChild.textContent
         tabprdn.API_Particle_Size = rowElement.cells[2].firstChild.textContent
         tabprdn.Screen_Size = rowElement.cells[3].firstChild.textContent
-        tabprdn.Blend_Time = parseInt(rowElement.cells[4].firstChild.textContent,10)
+        tabprdn.Blend_Time = rowElement.cells[4].firstChild.textContent
         tabprdn.Compressor = rowElement.cells[5].firstChild.textContent
-        tabprdn.Inlet_Temp = parseInt(rowElement.cells[6].firstChild.textContent,10)
-        tabprdn.Spray_Rate = parseInt(rowElement.cells[7].firstChild.textContent,10)
-        tabprdn.Dissolution = parseInt(rowElement.cells[8].firstChild.textContent,10)
+        tabprdn.Inlet_Temp = rowElement.cells[6].firstChild.textContent
+        tabprdn.Spray_Rate = rowElement.cells[7].firstChild.textContent
+        tabprdn.Dissolution = rowElement.cells[8].firstChild.textContent
         return tabprdn
     }
 
     function settabprdnInRow(rowElement, tabprdn){
-        rowElement.cells[0].firstChild.textContent= tabprdn.Batch_No  
+        rowElement = document.getElementById(tabprdn.Batch_No)
         rowElement.cells[1].firstChild.textContent= tabprdn.API_Lot_No 
         rowElement.cells[2].firstChild.textContent= tabprdn.API_Particle_Size
         rowElement.cells[3].firstChild.textContent= tabprdn.Screen_Size
@@ -220,44 +231,44 @@
 
     function populateFormWithtabprdn(tabprdn){
         var form = document.getElementById('createUpdateForm')
+
+        form.querySelector('input[name="Batch_No"]').value = tabprdn.Batch_No
         form.querySelector('input[name="Batch_No"]').disabled = true
 
-        form.querySelector('input[name="Batch_No"]').value  = tabprdn.Batch_No 
-        form.querySelector('select[name="API_Lot_No"]').value= tabprdn.API_Lot_No
-        form.querySelector('input[name="API_Particle_Size"]').value= tabprdn.API_Particle_Size
-        form.querySelector('input[name="Screen_Size"]').value= tabprdn.Screen_Size
-        form.querySelector('select[name="Blend_Time"]').value= tabprdn.Blend_Time
-        form.querySelector('input[name="Compressor"]').value= tabprdn.Compressor
-        form.querySelector('input[name="Inlet_Temp"]').value= tabprdn.Inlet_Temp
-        form.querySelector('select[name="Spray_Rate"]').value= tabprdn.Spray_Rate
-        return tabprdn
+        form.querySelector('input[name="API_Lot_No"]').value = tabprdn.API_Lot_No
+        form.querySelector('select[name="API_Particle_Size"]').value = tabprdn.API_Particle_Size
+        form.querySelector('select[name="Screen_Size"]').value = tabprdn.Screen_Size
+        form.querySelector('input[name="Blend_Time"]').value = tabprdn.Blend_Time
+        form.querySelector('select[name="Compressor"]').value = tabprdn.Compressor
+        form.querySelector('input[name="Inlet_Temp"]').value = tabprdn.Inlet_Temp
+        form.querySelector('input[name="Spray_Rate"]').value = tabprdn.Spray_Rate
+        form.querySelector('input[name="Dissolution"]').value = tabprdn.Dissolution
     }
 
     function gettabprdnFromForm(){
         var form = document.getElementById('createUpdateForm')
         var tabprdn = {}
         tabprdn.Batch_No = form.querySelector('input[name="Batch_No"]').value
-        tabprdn.API_Lot_No = form.querySelector('select[name="API_Lot_No"]').value
-        tabprdn.API_Particle_Size = form.querySelector('input[name="API_Particle_Size"]').value
-        tabprdn.Screen_Size = form.querySelector('input[name="Screen_Size"]').value
-        tabprdn.Blend_Time = parseInt(form.querySelector('input[name="Blend_Time"]').value,10)
+        tabprdn.API_Lot_No = form.querySelector('input[name="API_Lot_No"]').value
+        tabprdn.API_Particle_Size = form.querySelector('select[name="API_Particle_Size"]').value
+        tabprdn.Screen_Size = form.querySelector('select[name="Screen_Size"]').value
+        tabprdn.Blend_Time = form.querySelector('input[name="Blend_Time"]').value
         tabprdn.Compressor = form.querySelector('select[name="Compressor"]').value
-        tabprdn.Inlet_Temp = parseInt(form.querySelector('input[name="Inlet_Temp"]').value,10)
-        tabprdn.Spray_Rate = parseInt(form.querySelector('input[name="Spray_Rate"]').value,10)
-        tabprdn.Dissolution = parseInt(form.querySelector('input[name="Dissolution"]').value,10)
+        tabprdn.Inlet_Temp = form.querySelector('input[name="Inlet_Temp"]').value
+        tabprdn.Spray_Rate = form.querySelector('input[name="Spray_Rate"]').value
+        tabprdn.Dissolution = form.querySelector('input[name="Dissolution"]').value
         console.log(JSON.stringify(tabprdn))
         return tabprdn
     }
 
     function getAllAjax(){
         $.ajax({
-            "url": "http://127.0.0.1:5000/tabletss",
+            "url": "http://127.0.0.1:5000/tablets",
             "method":"GET",
             "data":"",
             "dataType": "JSON",
-            "success":function(result){
-                //console.log(result);
-                for (tabprdn of result.tabprdns){
+            "success":function(results){
+                for (tabprdn of results){
                     addtabprdnToTable(tabprdn);
                 }              
             },
@@ -271,7 +282,7 @@
     //var tabprdn = {"API_Lot_No" : "AB", "API_Particle_Size":"Large", "Screen_Size":"5", "Blend_Time":89, "Compressor":"Compress1", "Inlet_Temp":110, "Spray_Rate":400, "Dissolution":75}
         console.log(JSON.stringify(tabprdn));
         $.ajax({
-            "url": "http://127.0.0.1:5000/tablets",
+            "url": "/tablets",
             "method":"POST",
             "data":JSON.stringify(tabprdn),
             "dataType": "JSON",
@@ -287,15 +298,16 @@
 
     function updatetabprdnAjax(tabprdn){
     //var tabprdn = {"API_Lot_No" : "AB", "API_Particle_Size":"Large", "Screen_Size":"5", "Blend_Time":89, "Compressor":"Compress1", "Inlet_Temp":110, "Spray_Rate":400, "Dissolution":75}
-        console.log(JSON.stringify(tabprdn));
         $.ajax({
-            "url": "http://127.0.0.1:5000/tablets/"+encodeURI(tabprdn.Batch_No),
+            "url": "/tablets/"+tabprdn.Batch_No,
             "method":"PUT",
             "data":JSON.stringify(tabprdn),
             "dataType": "JSON",
             contentType: "application/json; charset=utf-8",
             "success":function(result){
-               // console.log(result);                  
+                console.log(result)
+                addtabprdnToTable(tabprdn)
+                showDisplay()                               
             },
             "error":function(xhr,status,error){
                 console.log("error: "+status+" msg:"+error);
@@ -303,24 +315,6 @@
         });
     }
 
-    function deletetabprdnAjax(Batch_No){
-        //var car = {"reg":"12 D 1234"}
-        console.log(JSON.stringify(tabprdn));
-        $.ajax({
-            "url": "http://127.0.0.1:5000/tablets/"+encodeURI(Batch_No),
-            "method":"DELETE",
-            "data":"",
-            "dataType": "JSON",
-            contentType: "application/json; charset=utf-8",
-            "success":function(result){
-                //console.log(result);
-                  
-            },
-            "error":function(xhr,status,error){
-                console.log("error: "+status+" msg:"+error);
-            }
-        });
-    }
     getAllAjax();
 
     </script>

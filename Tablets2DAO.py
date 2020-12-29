@@ -1,13 +1,14 @@
 import mysql.connector
+import dbconfig as cfg
 
 class tabletsDAO:
     db=""
     def __init__(self):
         self.db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="ROOT", #Password on local machine
-            database="tablets"
+            host=cfg.mysql['host'],
+            user=cfg.mysql['user'],
+            password=cfg.mysql['password'],
+            database=cfg.mysql['database']
         )
       
     def create(self, tabprdn):
@@ -69,10 +70,13 @@ class tabletsDAO:
     def delete(self, Batch_No):
         cursor = self.db.cursor()
         sql="delete from tabprdn where Batch_No = %s"
-        values =[Batch_No]
+        values = (Batch_No,)
+
         cursor.execute(sql, values)
-        return{}
- 
+
+        self.db.commit()
+        print("delete done")
+
     def convertToDict(self, result):
         colnames = ['Batch_No', 'API_Lot_No', 'API_Particle_Size', 'Screen_Size', 'Blend_Time', 'Compressor', 'Inlet_Temp', 'Spray_Rate', 'Dissolution']
         tabprdn = {}

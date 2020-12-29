@@ -14,7 +14,7 @@ def getAll():
     return jsonify(tabletsDAO.getAll())
 
 # find by Batch_No
-@app.route('/tablets/<int:Batch_No>')
+@app.route('/tablets/<Batch_No>')
 def findByID(Batch_No):
     return jsonify(tabletsDAO.findByID(Batch_No))
 
@@ -41,7 +41,7 @@ def create():
 
 #update
 # curl -X PUT -d "{\"API_Lot_No\":\"AB\", \"API_Particle_Size\":\"Large\", \"Screen_Size\":\"5\", \"Blend_Time\":89, \"Compressor\":\"Compress1\", \"Inlet_Temp\":110, \"Spray_Rate\":400, \"Dissolution\":75}" -H Content-Type:application/json http://127.0.0.1:5000/tablets/1000
-@app.route('/tablets/<int:Batch_No>', methods=['PUT'])
+@app.route('/tablets/<Batch_No>', methods=['PUT'])
 def update(Batch_No):
     foundBatch=tabletsDAO.findByID(Batch_No)
     print(foundBatch)
@@ -67,11 +67,12 @@ def update(Batch_No):
     if 'Dissolution' in request.json:
         currentBatch['Dissolution'] = request.json['Dissolution'] 
     tabletsDAO.update(currentBatch)
-    return jsonify(currentBatch)
+    #return jsonify(currentBatch)
+    return jsonify(tabletsDAO.update(tabprdn))
 
 #delete
 # curl -X DELETE http://127.0.0.1:5000/tablets/1000
-@app.route('/tablets/<int:Batch_No>', methods=['DELETE'])
+@app.route('/tablets/<Batch_No>', methods=['DELETE'])
 def delete(Batch_No):
     tabletsDAO.delete(Batch_No)
     return jsonify({"done":True})
